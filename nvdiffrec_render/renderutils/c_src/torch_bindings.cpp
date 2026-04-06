@@ -242,7 +242,7 @@ torch::Tensor lambert_fwd(torch::Tensor nrm, torch::Tensor wi, bool fp16)
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Extract input parameters.
-    LambertKernelParams p;
+    LambertKernelParams p = {};
     p.out.fp16 = fp16;
     update_grid(p.gridSize, nrm, wi);
 
@@ -270,7 +270,7 @@ std::tuple<torch::Tensor, torch::Tensor> lambert_bwd(torch::Tensor nrm, torch::T
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Extract input parameters.
-    LambertKernelParams p;
+    LambertKernelParams p = {};
     update_grid(p.gridSize, nrm, wi);
 
     // Choose launch parameters.
@@ -744,7 +744,7 @@ torch::Tensor diffuse_cubemap_fwd(torch::Tensor cubemap)
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Extract input parameters.
-    DiffuseCubemapKernelParams p;
+    DiffuseCubemapKernelParams p = {}; //CRITICAL: avoid uninitialized memory
     update_grid(p.gridSize, cubemap);
 
     // Allocate output tensors.
@@ -774,7 +774,7 @@ torch::Tensor diffuse_cubemap_bwd(torch::Tensor cubemap, torch::Tensor grad)
     cudaStream_t stream = at::cuda::getCurrentCUDAStream();
 
     // Extract input parameters.
-    DiffuseCubemapKernelParams p;
+    DiffuseCubemapKernelParams p = {}; //CRITICAL: avoid uninitialized memory!
     update_grid(p.gridSize, cubemap);
 
     // Choose launch parameters.
